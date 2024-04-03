@@ -1,4 +1,3 @@
-import random
 import turtle
 
 # SCREEN
@@ -19,6 +18,10 @@ pen.write("player A = 0 player B = 0", align="center", font=("Courier", 16, "nor
 
 pen.goto(0, HEIGHT)
 pen.right(90)
+
+# Create the score system.
+scoreA = 0
+scoreB = 0
 
 # for loops
 for i in range(50):
@@ -45,12 +48,12 @@ def paddle_a_stop():
   paddle_a_up = False
     
 # Move paddle A function
-def move_paddle_a_down():
+def move_paddle_a_down(): # on Keypress
   global paddle_a_down
   paddle_a_down = True
 
 # Stop paddle A from moving down.
-def stop_paddle_a_down():
+def stop_paddle_a_down(): # On key release.
   global paddle_a_stop
   paddle_a_down = False
 
@@ -61,7 +64,7 @@ def stop_paddle_b_up():
   
 # Move paddle B function
 def move_paddle_b_up():
-  global paddle_b
+  global paddle_b_up
   paddle_b_up = True
 
 # Stop paddle B from moving down.
@@ -78,7 +81,7 @@ def move_paddle_b_down():
 screen.onkeypress(paddle_a_up, "w")
 screen.onkeyrelease(paddle_a_stop, "w")
 
-screen.onkeypress(paddle_a_down, "s")
+screen.onkeypress(move_paddle_a_down, "s")
 screen.onkeyrelease(stop_paddle_a_down, "s")
 
 # Setup keyboard bindings (Other side)
@@ -107,6 +110,7 @@ paddle_b.color("purple")
 paddle_b.penup()
 paddle_b.goto(WIDTH / 2, 0)
 paddle_b.shapesize(stretch_wid = 5, stretch_len = 1)
+
 # Create the ball
 ball = turtle.Turtle()
 ball.speed(0)
@@ -118,10 +122,32 @@ ball.penup()
 ball.dx = 0.15
 ball.dy = 0.15
 
-# Create line.
-
-# While loops
+# While loops (gameloops)
 while (True):
+  ball.setx(ball.xcor() + ball.dx)
+  ball.sety(ball.ycor() + ball.dy)
+  
+  # Border checking
+  if ball.ycor() > HEIGHT / 3 or  ball.ycor() < -HEIGHT / 3:
+    ball.dy *= -1
+  if ball.xcor() > WIDTH / 2:
+    ball.goto(0, 0)
+    ball.dx *= -1
+    scoreA += 1
+    pen.clear()
+    pen.write("player A: {} player B: {}".format(scoreA, scoreB, align="center", font=("Courier", 16, "normal")))
+  if ball.xcor() < -WIDTH / 2 or ball.xcor() < -WIDTH / 2:
+    ball.goto(0, 0)
+    ball.dx *= -1
+    scoreB += 1
+    pen.clear()
+    pen.write("player A: {} player B: {}".format(scoreA, scoreB), align="center", font=("Courier", 16, "normal"))
+  if (ball.xcor() > paddle_b.xcor()- 10 and ball.xcor() < paddle_b.xcor() + 10) and (ball.ycor() < paddle_b.ycor() + 60 and ball.ycor() > paddle_b.ycor() - 60):
+      ball.setx(paddle_b.xcor() - 10)
+      ball.dx *= -1
+  if (ball.xcor() > paddle_a.xcor()- 10 and ball.xcor() < paddle_a.xcor() + 10) and (ball.ycor() < paddle_a.ycor() + 60 and ball.ycor() > paddle_a.ycor() - 60):
+    ball.setx(paddle_b.xcor() - 10)
+    ball.dx *= -1
   if paddle_a_up == True:
     y = paddle_a.ycor()
     y += 2
@@ -131,4 +157,13 @@ while (True):
     y = paddle_a.ycor()
     y -= 2
     paddle_a.sety(y)
+
+  if paddle_b_up == True:
+    y = paddle_b.ycor()
+    y += 2
+    paddle_b.sety(y)
+  if paddle_b_down == True:
+    y = paddle_b.ycor()
+    y -= 2
+    paddle_b.sety(y)
   screen.update()
