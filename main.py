@@ -1,4 +1,5 @@
 import turtle
+import random
 
 # SCREEN
 screen = turtle.Screen()
@@ -92,7 +93,20 @@ screen.onkeypress(move_paddle_b_down, "Down")
 screen.onkeyrelease(stop_paddle_b_down, "Down")
 
 screen.listen()
-
+bg_squares = []
+for i in range(10):
+  square = turtle.Turtle()
+  square.speed(0)
+  square.shape("square")
+  square.color((random.randint(1, 100), random.randint(1, 100), random.randint(1, 100)))
+  square.penup()
+  square.goto(random.randint(-300, 300), random.randint(-300, 300))
+  square.sqSize = random.randint(1, 7)
+  square.dx = random.uniform(0, 15, 0.55)
+  square.dy = random.uniform(0, 15, 0.55)
+  square.shapesize(square.sqSize, square.sq.Size)
+  bg_squares.append(square)
+  
 # Create the paddle A
 paddle_a = turtle.Turtle()
 paddle_a.speed(0)
@@ -119,8 +133,8 @@ ball.color("white")
 ball.penup()
 
 # Set the balls direction.
-ball.dx = 0.15
-ball.dy = 0.15
+ball.dx = 0.30
+ball.dy = 0.30
 
 # While loops (gameloops)
 while (True):
@@ -136,11 +150,21 @@ while (True):
     scoreA += 1
     pen.clear()
     pen.write("player A: {} player B: {}".format(scoreA, scoreB, align="center", font=("Courier", 16, "normal")))
-  if ball.xcor() < -WIDTH / 2 or ball.xcor() < -WIDTH / 2:
+  if ball.xcor() < -WIDTH / 2 or ball.xcor() > WIDTH / 2:
     ball.goto(0, 0)
     ball.dx *= -1
     scoreB += 1
     pen.clear()
+    pen.left(90)
+    pen.goto(0, HEIGHT / 3)
+    pen.write("Player A: {} Player B: {}".format(scoreA, scoreB), align="center", font = ("Courier", 24, "bold"))
+    pen.right(90)
+    for i in range(50):
+      pen.pendown()
+      pen.forward(10)
+      pen.penup()
+      pen.forward(10)
+      pen.hideturtle()
     pen.write("player A: {} player B: {}".format(scoreA, scoreB), align="center", font=("Courier", 16, "normal"))
   if (ball.xcor() > paddle_b.xcor()- 10 and ball.xcor() < paddle_b.xcor() + 10) and (ball.ycor() < paddle_b.ycor() + 60 and ball.ycor() > paddle_b.ycor() - 60):
       ball.setx(paddle_b.xcor() - 10)
@@ -166,4 +190,13 @@ while (True):
     y = paddle_b.ycor()
     y -= 2
     paddle_b.sety(y)
+
+    # Update the screen
+    if paddle_a.ycor() < HEIGHT / 3:
+      paddle_a.sety(HEIGHT / 3)
+    if paddle_a.ycor() > - HEIGHT / 3:
+      paddle_a.sety(-HEIGHT / 3)
+    # Between paddle A and B for Height.
+    if paddle_b.ycor() < HEIGHT / 3:
+      paddle_b.sety(HEIGHT / 3)
   screen.update()
