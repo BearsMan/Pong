@@ -26,11 +26,11 @@ scoreB = 0
 
 # for loops
 for i in range(50):
-    pen.pendown()
-    pen.forward(10)
-    pen.penup()
-    pen.forward(10)
-pen.hideturtle()
+  pen.pendown()
+  pen.forward(10)
+  pen.penup()
+  pen.forward(10)
+  pen.hideturtle()
 # Move paddles via keyboard method
 paddle_a_up = False
 paddle_a_down = False
@@ -39,12 +39,12 @@ paddle_b_up = False
 paddle_b_down = False
 
 # Move paddle function
-def paddle_a_up():
+def move_paddle_a_up():
     global paddle_a_up
     paddle_a_up = True
 
 # Stop paddle A from moving up.
-def paddle_a_stop():
+def stop_paddle_a_up():
   global paddle_a_up
   paddle_a_up = False
     
@@ -55,7 +55,7 @@ def move_paddle_a_down(): # on Keypress
 
 # Stop paddle A from moving down.
 def stop_paddle_a_down(): # On key release.
-  global paddle_a_stop
+  global paddle_a_down
   paddle_a_down = False
 
 # Stop paddle B from moving up.
@@ -79,8 +79,8 @@ def move_paddle_b_down():
   paddle_b_down = True
   
 # Setup keyboard bindings
-screen.onkeypress(paddle_a_up, "w")
-screen.onkeyrelease(paddle_a_stop, "w")
+screen.onkeypress(move_paddle_a_up, "w")
+screen.onkeyrelease(stop_paddle_a_up, "w")
 
 screen.onkeypress(move_paddle_a_down, "s")
 screen.onkeyrelease(stop_paddle_a_down, "s")
@@ -98,13 +98,13 @@ for i in range(10):
   square = turtle.Turtle()
   square.speed(0)
   square.shape("square")
-  square.color((random.randint(1, 100), random.randint(1, 100), random.randint(1, 100)))
+  square.color("black")
   square.penup()
   square.goto(random.randint(-300, 300), random.randint(-300, 300))
   square.sqSize = random.randint(1, 7)
-  square.dx = random.uniform(0, 15, 0.55)
-  square.dy = random.uniform(0, 15, 0.55)
-  square.shapesize(square.sqSize, square.sq.Size)
+  square.dx = random.uniform(0.15, 0.55)
+  square.dy = random.uniform(0.15, 0.55)
+  square.shapesize(square.sqSize, square.sqSize)
   bg_squares.append(square)
   
 # Create the paddle A
@@ -137,19 +137,22 @@ ball.dx = 0.30
 ball.dy = 0.30
 
 # While loops (gameloops)
-while (True):
+while True:
+  screen.update()
   ball.setx(ball.xcor() + ball.dx)
   ball.sety(ball.ycor() + ball.dy)
   
   # Border checking
   if ball.ycor() > HEIGHT / 3 or  ball.ycor() < -HEIGHT / 3:
     ball.dy *= -1
+    
   if ball.xcor() > WIDTH / 2:
     ball.goto(0, 0)
     ball.dx *= -1
     scoreA += 1
     pen.clear()
     pen.write("player A: {} player B: {}".format(scoreA, scoreB, align="center", font=("Courier", 16, "normal")))
+    
   if ball.xcor() < -WIDTH / 2 or ball.xcor() > WIDTH / 2:
     ball.goto(0, 0)
     ball.dx *= -1
@@ -166,11 +169,13 @@ while (True):
       pen.forward(10)
       pen.hideturtle()
     pen.write("player A: {} player B: {}".format(scoreA, scoreB), align="center", font=("Courier", 16, "normal"))
+    
   if (ball.xcor() > paddle_b.xcor()- 10 and ball.xcor() < paddle_b.xcor() + 10) and (ball.ycor() < paddle_b.ycor() + 60 and ball.ycor() > paddle_b.ycor() - 60):
-      ball.setx(paddle_b.xcor() - 10)
+      ball.setx(paddle_b.xcor() + 10)
       ball.dx *= -1
+    
   if (ball.xcor() > paddle_a.xcor()- 10 and ball.xcor() < paddle_a.xcor() + 10) and (ball.ycor() < paddle_a.ycor() + 60 and ball.ycor() > paddle_a.ycor() - 60):
-    ball.setx(paddle_b.xcor() - 10)
+    ball.setx(paddle_a.xcor() + 10)
     ball.dx *= -1
   if paddle_a_up == True:
     y = paddle_a.ycor()
@@ -192,11 +197,10 @@ while (True):
     paddle_b.sety(y)
 
     # Update the screen
-    if paddle_a.ycor() < HEIGHT / 3:
-      paddle_a.sety(HEIGHT / 3)
-    if paddle_a.ycor() > - HEIGHT / 3:
-      paddle_a.sety(-HEIGHT / 3)
+  if paddle_a.ycor() < HEIGHT / 3:
+    paddle_a.sety(HEIGHT / 3)
+  if paddle_a.ycor() > - HEIGHT / 3:
+    paddle_a.sety(-HEIGHT / 3)
     # Between paddle A and B for Height.
-    if paddle_b.ycor() < HEIGHT / 3:
-      paddle_b.sety(HEIGHT / 3)
-  screen.update()
+  if paddle_b.ycor() < HEIGHT / 3:
+    paddle_b.sety(HEIGHT / 3)
